@@ -1,12 +1,26 @@
 package br.edu.iff.restaurante.model;
 
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 public class Funcionario extends Pessoa{
+
+    @Column(nullable = false)
     private String cargo;
+
+    @Column(nullable = false)
     private String senha;
-    private List<Comanda> comandas;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "funcionario")
+    private List<Comanda> comandas = new ArrayList<>();
 
     public Funcionario() {
     }
@@ -39,18 +53,5 @@ public class Funcionario extends Pessoa{
 
     public void setComandas(List<Comanda> comandas) {
         this.comandas = comandas;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Funcionario that = (Funcionario) o;
-        return Objects.equals(cargo, that.cargo) && Objects.equals(senha, that.senha);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cargo, senha);
     }
 }

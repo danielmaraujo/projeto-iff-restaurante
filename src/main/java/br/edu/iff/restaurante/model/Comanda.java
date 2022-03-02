@@ -1,24 +1,52 @@
 package br.edu.iff.restaurante.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Comanda implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue
     private Integer id;
+
+    @Column(nullable = false)
     private LocalDateTime horarioAbertura;
+
     private BigDecimal valorTotal;
+
+    @Column(nullable = false)
     private Integer numMesa;
+
     private LocalDateTime horarioFechamento;
+
+    @Enumerated(EnumType.STRING)
     private FormaPagamentoEnum formaPagamento;
+
+    @Enumerated(EnumType.ORDINAL)
     private StatusComandaEnum status;
-    private List<Item> itens;
+
+    @OneToMany(mappedBy = "comanda")
+    private List<Item> itens = new ArrayList<>();
+
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Funcionario funcionario;
+
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Cliente cliente;
 
     public Comanda() {
     }
@@ -100,6 +128,14 @@ public class Comanda implements Serializable {
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     @Override

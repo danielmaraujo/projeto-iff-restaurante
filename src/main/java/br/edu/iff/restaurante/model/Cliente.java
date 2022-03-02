@@ -1,8 +1,11 @@
 package br.edu.iff.restaurante.model;
 
-import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
+@Entity
 public class Cliente extends Pessoa{
+    @Column
     private String telefone;
 
     public Cliente() {
@@ -21,16 +24,4 @@ public class Cliente extends Pessoa{
         this.telefone = telefone;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cliente cliente = (Cliente) o;
-        return Objects.equals(telefone, cliente.telefone);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(telefone);
-    }
 }

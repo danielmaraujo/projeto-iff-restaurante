@@ -1,14 +1,22 @@
 package br.edu.iff.restaurante.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @Id
+    @ManyToOne
+    @JoinColumn()
     private Comanda comanda;
+    @Id
+    @ManyToOne
     private Produto produto;
+
+    @Column(nullable = false)
     private int qtde;
 
     public Item() {
