@@ -35,7 +35,7 @@ public class Comanda implements Serializable {
     @Enumerated(EnumType.ORDINAL)
     private StatusComandaEnum status;
 
-    @OneToMany(mappedBy = "comanda")
+    @ElementCollection
     private List<Item> itens = new ArrayList<>();
 
     @JsonManagedReference

@@ -4,16 +4,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
+@Embeddable
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @ManyToOne
-    @JoinColumn()
-    private Comanda comanda;
-    @Id
-    @ManyToOne
+    @ManyToOne()
+    @JoinColumn(nullable = false)
     private Produto produto;
 
     @Column(nullable = false)
@@ -22,18 +18,9 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(Comanda comanda, Produto produto, int qtde) {
-        this.comanda = comanda;
+    public Item(Produto produto, int qtde) {
         this.produto = produto;
         this.qtde = qtde;
-    }
-
-    public Comanda getComanda() {
-        return comanda;
-    }
-
-    public void setComanda(Comanda comanda) {
-        this.comanda = comanda;
     }
 
     public Produto getProduto() {
@@ -57,11 +44,11 @@ public class Item implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Objects.equals(comanda, item.comanda) && Objects.equals(produto, item.produto);
+        return qtde == item.qtde && Objects.equals(produto, item.produto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(comanda, produto);
+        return Objects.hash(produto, qtde);
     }
 }
