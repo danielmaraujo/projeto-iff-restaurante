@@ -1,6 +1,13 @@
 package br.edu.iff.restaurante.model;
 
+import br.edu.iff.restaurante.annotation.UniqueCPFValidation;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,13 +18,19 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 14)
+    @Column(length = 14, unique = true)
+    @CPF(message = "CPF inválido")
+    @NotNull(message = "Campo obrigatório.")
+    @UniqueCPFValidation
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
+    @NotBlank(message = "Campo obrigatório.")
+    @Length(max = 30, message = "Máximo de caracteres: 30")
     private String nome;
 
     @Embedded
+    @Valid
     private Endereco endereco;
 
     protected Pessoa() {

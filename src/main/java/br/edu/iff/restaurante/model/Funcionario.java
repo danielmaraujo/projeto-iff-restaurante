@@ -1,25 +1,32 @@
 package br.edu.iff.restaurante.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Funcionario extends Pessoa{
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
+    @NotBlank(message = "Campo obrigatório.")
+    @Length(max = 20, message = "Máximo de caracteres: 20")
     private String cargo;
 
     @Column(nullable = false)
+    @NotBlank(message = "Campo obrigatório.")
+    @Length(min = 6, message = "Minimo de caracteres: 6")
     private String senha;
 
-    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "funcionario")
+    @Valid
     private List<Comanda> comandas = new ArrayList<>();
 
     public Funcionario() {

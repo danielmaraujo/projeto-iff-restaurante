@@ -1,6 +1,10 @@
 package br.edu.iff.restaurante.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,9 +14,14 @@ public class Item implements Serializable {
     private static final long serialVersionUID = 1L;
     @ManyToOne()
     @JoinColumn(nullable = false)
+    @NotNull(message = "Campo obrigatório.")
+    @Valid
     private Produto produto;
 
     @Column(nullable = false)
+    @NotNull(message = "Campo obrigatório.")
+    @Min(value = 1, message = "Quantidade precisa ser maior que 1.")
+    @Digits(integer = 3, fraction = 0, message = "Formato inválido.")
     private int qtde;
 
     public Item() {

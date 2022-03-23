@@ -1,8 +1,11 @@
 package br.edu.iff.restaurante.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,32 +23,48 @@ public class Comanda implements Serializable {
     private Integer id;
 
     @Column(nullable = false)
+    @NotNull(message = "Campo obrigatório.")
+    @PastOrPresent(message = "Horário de abertura não pode ser futuro.")
     private LocalDateTime horarioAbertura;
 
+    @Positive(message = "Apenas valores positivos.")
+    @Digits(integer = 7, fraction = 2, message = "Formato inválido")
     private BigDecimal valorTotal;
 
     @Column(nullable = false)
+    @NotBlank(message = "Campo obrigatório.")
+    @Digits(integer = 2, fraction = 0, message = "Formato inválido")
+    @Min(value = 1, message = "Mesa não existe")
+    @Max(value = 21, message = "Mesa não existe")
     private Integer numMesa;
 
+    @NotNull(message = "Campo obrigatório.")
+    @PastOrPresent(message = "Horário de fechamento não pode ser futuro.")
     private LocalDateTime horarioFechamento;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Campo obrigatório.")
     private FormaPagamentoEnum formaPagamento;
 
     @Enumerated(EnumType.ORDINAL)
+    @NotNull(message = "Campo obrigatório.")
     private StatusComandaEnum status;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @NotNull
+    @Valid
     private List<Item> itens = new ArrayList<>();
 
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(nullable = false)
+    @NotNull(message = "Campo obrigatório.")
+    @Valid
     private Funcionario funcionario;
 
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(nullable = false)
+    @NotNull(message = "Campo obrigatório.")
+    @Valid
     private Cliente cliente;
 
     public Comanda() {
