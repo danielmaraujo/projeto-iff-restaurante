@@ -14,12 +14,11 @@ public class Item implements Serializable {
     private static final long serialVersionUID = 1L;
     @ManyToOne()
     @JoinColumn(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
-    @Valid
+    @NotNull(message = "Produto obrigatório.")
     private Produto produto;
 
     @Column(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Quantidade obrigatória.")
     @Min(value = 1, message = "Quantidade precisa ser maior que 1.")
     @Digits(integer = 3, fraction = 0, message = "Formato inválido.")
     private int qtde;

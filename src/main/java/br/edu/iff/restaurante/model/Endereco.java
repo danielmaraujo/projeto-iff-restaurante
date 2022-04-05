@@ -12,22 +12,22 @@ import javax.validation.constraints.Pattern;
 @Embeddable
 public class Endereco {
     @Column(nullable = false, length = 50)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Rua obrigatória.")
     @Length(max = 50, message = "Máximo de caracteres: 50")
     private String rua;
     @Column(nullable = false)
-    @Digits(integer = 4, fraction = 0, message = "Formato inválido.")
+    @Digits(integer = 4, fraction = 0, message = "Formato de número inválido.")
     private Integer num;
     @Column(nullable = false, length = 30)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Bairro obrigatório.")
     @Length(max = 30, message = "Máximo de caracteres: 30")
     private String bairro;
     @Column(nullable = false, length = 30)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Cidade obrigatória.")
     @Length(max = 30, message = "Máximo de caracteres: 30")
     private String cidade;
     @Column(nullable = false, length = 8)
-    @Pattern(regexp = "\\d{5}-?\\d{3}", message = "Formato deve ser \'XXXXX-XXX\'")
+    @Pattern(regexp = "\\d{5}-?\\d{3}", message = "Formato de CEP deve ser \'XXXXX-XXX\'")
     private String cep;
 
     public String getRua() {

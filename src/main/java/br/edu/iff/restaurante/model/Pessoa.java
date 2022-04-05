@@ -1,6 +1,5 @@
 package br.edu.iff.restaurante.model;
 
-import br.edu.iff.restaurante.annotation.UniqueCPFValidation;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -20,12 +19,11 @@ public abstract class Pessoa implements Serializable {
     @Id
     @Column(length = 14, unique = true)
     @CPF(message = "CPF inválido")
-    @NotNull(message = "Campo obrigatório.")
-    @UniqueCPFValidation
+    @NotNull(message = "CPF obrigatório.")
     private String cpf;
 
     @Column(nullable = false, length = 30)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Nome obrigatório.")
     @Length(max = 30, message = "Máximo de caracteres: 30")
     private String nome;
 

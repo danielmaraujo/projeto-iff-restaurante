@@ -24,12 +24,12 @@ public class Produto implements Serializable {
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 30)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Nome obrigatório.")
     @Length(max = 30, message = "Máximo de caracteres: 30")
     private String nome;
 
     @Column(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Valor obrigatório.")
     @Positive(message = "Apenas valores positivos.")
     @Digits(integer = 7, fraction = 2, message = "Formato inválido")
     private BigDecimal valor;

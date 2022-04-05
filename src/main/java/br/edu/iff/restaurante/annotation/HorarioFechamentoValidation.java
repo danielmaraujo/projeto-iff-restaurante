@@ -5,11 +5,11 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = UniqueCPFValidator.class)
+@Constraint(validatedBy = HorarioFechamentoValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueCPFValidation {
-    String message() default "CPF já foi cadastrado.";
+public @interface HorarioFechamentoValidation {
+    String message() default "Horario de fechamento não pode ser anterior ao horário de abertura";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

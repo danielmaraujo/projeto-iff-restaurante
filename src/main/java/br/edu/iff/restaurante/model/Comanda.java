@@ -1,8 +1,6 @@
 package br.edu.iff.restaurante.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.Fetch;
-
+import br.edu.iff.restaurante.annotation.HorarioFechamentoValidation;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,7 +21,7 @@ public class Comanda implements Serializable {
     private Integer id;
 
     @Column(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Horário de abertura obrigatório.")
     @PastOrPresent(message = "Horário de abertura não pode ser futuro.")
     private LocalDateTime horarioAbertura;
 
@@ -32,22 +30,23 @@ public class Comanda implements Serializable {
     private BigDecimal valorTotal;
 
     @Column(nullable = false)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Número da mesa obrigatório.")
     @Digits(integer = 2, fraction = 0, message = "Formato inválido")
     @Min(value = 1, message = "Mesa não existe")
     @Max(value = 21, message = "Mesa não existe")
     private Integer numMesa;
 
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Horário de fechamento obrigatório.")
     @PastOrPresent(message = "Horário de fechamento não pode ser futuro.")
+    @HorarioFechamentoValidation
     private LocalDateTime horarioFechamento;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Forma de pagamento obrigatória.")
     private FormaPagamentoEnum formaPagamento;
 
     @Enumerated(EnumType.ORDINAL)
-    @NotNull(message = "Campo obrigatório.")
+    @NotNull(message = "Status da comanda obrigatório.")
     private StatusComandaEnum status;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -57,14 +56,12 @@ public class Comanda implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
-    @Valid
+    @NotNull(message = "Funcionário obrigatório.")
     private Funcionario funcionario;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @NotNull(message = "Campo obrigatório.")
-    @Valid
+    @NotNull(message = "Cliente obrigatório.")
     private Cliente cliente;
 
     public Comanda() {

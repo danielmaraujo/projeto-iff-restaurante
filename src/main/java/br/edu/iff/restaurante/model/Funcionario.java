@@ -15,18 +15,17 @@ import java.util.List;
 public class Funcionario extends Pessoa{
 
     @Column(nullable = false, length = 20)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Cargo obrigatório.")
     @Length(max = 20, message = "Máximo de caracteres: 20")
     private String cargo;
 
     @Column(nullable = false)
-    @NotBlank(message = "Campo obrigatório.")
+    @NotBlank(message = "Senha obrigatória.")
     @Length(min = 6, message = "Minimo de caracteres: 6")
     private String senha;
 
     @JsonIgnore
     @OneToMany(mappedBy = "funcionario")
-    @Valid
     private List<Comanda> comandas = new ArrayList<>();
 
     public Funcionario() {
