@@ -1,5 +1,6 @@
 package br.edu.iff.restaurante.service;
 
+import br.edu.iff.restaurante.exception.NotFoundException;
 import br.edu.iff.restaurante.model.Cliente;
 import br.edu.iff.restaurante.model.Comanda;
 import br.edu.iff.restaurante.model.Funcionario;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class ComandaService {
     public Comanda findById(Integer id) {
         Optional<Comanda> result = repo.findById(id);
         if (!result.isPresent()) {
-            throw new RuntimeException("Comanda não encontrada.");
+            throw new NotFoundException("Comanda não encontrada.");
         }
         return result.get();
     }
@@ -39,7 +41,7 @@ public class ComandaService {
     public List<Comanda> findBetweenDates(LocalDateTime inicio, LocalDateTime termino) {
         List<Comanda> result = repo.findComandaBetweenDates(inicio, termino);
         if (result.isEmpty()) {
-            throw new RuntimeException("Nenhuma comanda nesse período.");
+            throw new NotFoundException("Nenhuma comanda nesse período.");
         }
         return result;
     }
@@ -49,6 +51,12 @@ public class ComandaService {
         try {
             return repo.save(c);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao salvar a comanda.");
         }
     }
@@ -69,6 +77,12 @@ public class ComandaService {
             c.setId(obj.getId());
             return repo.save(c);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao atualizar a comanda.");
         }
     }

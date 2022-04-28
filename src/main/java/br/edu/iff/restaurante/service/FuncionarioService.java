@@ -1,15 +1,20 @@
 package br.edu.iff.restaurante.service;
 
+import br.edu.iff.restaurante.exception.NotFoundException;
 import br.edu.iff.restaurante.model.Cliente;
 import br.edu.iff.restaurante.model.Funcionario;
 import br.edu.iff.restaurante.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
+
+@Service
 public class FuncionarioService {
     @Autowired
     FuncionarioRepository repo;
@@ -25,7 +30,7 @@ public class FuncionarioService {
     public Funcionario findById(String cpf) {
         Optional<Funcionario> result = repo.findById(cpf);
         if (!result.isPresent()) {
-            throw new RuntimeException("Funcionario não encontrado.");
+            throw new NotFoundException("Funcionario não encontrado.");
         }
         return result.get();
     }
@@ -35,7 +40,13 @@ public class FuncionarioService {
         try {
             return repo.save(f);
         } catch (Exception e) {
-            throw new RuntimeException("Falha ao salvar o Funcionario.");
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
+            throw new NotFoundException("Falha ao salvar o Funcionario.");
         }
     }
     private void verificaCpf(String cpf) {
@@ -47,12 +58,19 @@ public class FuncionarioService {
         }
     }
 
-    public Funcionario update(Funcionario f){
+    public Funcionario update(Funcionario f, String senhaAtual, String novaSenha, String confirmarNovaSenha){
         Funcionario obj = findById(f.getCpf());
+        alterarSenha(obj, senhaAtual, novaSenha, confirmarNovaSenha);
         try {
             f.setCpf(obj.getCpf());
             return repo.save(f);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao atualizar o Funcionario.");
         }
     }
@@ -63,6 +81,18 @@ public class FuncionarioService {
             repo.delete(obj);
         } catch (Exception e) {
             throw new RuntimeException("Falha ao excluir o Funcionario.");
+        }
+    }
+
+    private void alterarSenha(Funcionario obj, String senhaAtual, String novaSenha, String confirmarNovaSenha) {
+        if (!senhaAtual.isEmpty() && !novaSenha.isEmpty() && !confirmarNovaSenha.isEmpty()) {
+            if (!senhaAtual.equals(obj.getSenha())) {
+                throw new RuntimeException("Senha atual está incorreta.");
+            }
+            if (!novaSenha.equals(confirmarNovaSenha)) {
+                throw new RuntimeException("Nova Senha e Confirmar Nova Senha não conferem.");
+            }
+            obj.setSenha(novaSenha);
         }
     }
 }

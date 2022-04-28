@@ -1,15 +1,19 @@
 package br.edu.iff.restaurante.service;
 
 
+import br.edu.iff.restaurante.exception.NotFoundException;
 import br.edu.iff.restaurante.model.Produto;
 import br.edu.iff.restaurante.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProdutoService {
     @Autowired
     ProdutoRepository repo;
@@ -26,7 +30,7 @@ public class ProdutoService {
     public Produto findById(int id){
         Optional<Produto> result = repo.findById(id);
         if (result.isPresent()) {
-            throw new RuntimeException("Hotel não encontrado.");
+            throw new NotFoundException("Hotel não encontrado.");
         }
         return result.get();
     }
@@ -35,6 +39,12 @@ public class ProdutoService {
         try {
             return repo.save(p);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao salvar o produto.");
         }
     }
@@ -45,6 +55,12 @@ public class ProdutoService {
             p.setId(obj.getId());
             return repo.save(p);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao atualizar o Produto.");
         }
     }

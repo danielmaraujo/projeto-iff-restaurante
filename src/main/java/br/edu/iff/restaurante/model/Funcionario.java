@@ -1,6 +1,7 @@
 package br.edu.iff.restaurante.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
@@ -22,6 +23,7 @@ public class Funcionario extends Pessoa{
     @Column(nullable = false)
     @NotBlank(message = "Senha obrigatória.")
     @Length(min = 6, message = "Minimo de caracteres: 6")
+    @JsonIgnoreProperties(allowGetters = false, allowSetters = true)
     private String senha;
 
     @JsonIgnore

@@ -1,6 +1,8 @@
 package br.edu.iff.restaurante.model;
 
 import br.edu.iff.restaurante.annotation.HorarioFechamentoValidation;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,6 +25,7 @@ public class Comanda implements Serializable {
     @Column(nullable = false)
     @NotNull(message = "Horário de abertura obrigatório.")
     @PastOrPresent(message = "Horário de abertura não pode ser futuro.")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime horarioAbertura;
 
     @Positive(message = "Apenas valores positivos.")
@@ -39,6 +42,7 @@ public class Comanda implements Serializable {
     @NotNull(message = "Horário de fechamento obrigatório.")
     @PastOrPresent(message = "Horário de fechamento não pode ser futuro.")
     @HorarioFechamentoValidation
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime horarioFechamento;
 
     @Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package br.edu.iff.restaurante.service;
 
+import br.edu.iff.restaurante.exception.NotFoundException;
 import br.edu.iff.restaurante.model.Cliente;
 import br.edu.iff.restaurante.model.Funcionario;
 import br.edu.iff.restaurante.repository.ClienteRepository;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +30,7 @@ public class ClienteService {
     public Cliente findById(String cpf) {
         Optional<Cliente> result = repo.findById(cpf);
         if (!result.isPresent()) {
-            throw new RuntimeException("Cliente não encontrado.");
+            throw new NotFoundException("Cliente não encontrado.");
         }
         return result.get();
     }
@@ -37,6 +40,12 @@ public class ClienteService {
         try {
             return repo.save(c);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao salvar o cliente.");
         }
     }
@@ -55,6 +64,12 @@ public class ClienteService {
             c.setCpf(obj.getCpf());
             return repo.save(c);
         } catch (Exception e) {
+            Throwable t = e;
+            while(t.getCause() != null){
+                t = t.getCause();
+                if(t instanceof ConstraintViolationException)
+                    throw ((ConstraintViolationException) t);
+            }
             throw new RuntimeException("Falha ao atualizar o cliente.");
         }
     }
