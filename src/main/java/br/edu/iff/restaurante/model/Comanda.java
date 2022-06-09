@@ -33,15 +33,14 @@ public class Comanda implements Serializable {
     private BigDecimal valorTotal;
 
     @Column(nullable = false)
-    @NotBlank(message = "Número da mesa obrigatório.")
+    @NotNull(message = "Número da mesa obrigatório.")
     @Digits(integer = 2, fraction = 0, message = "Formato inválido")
     @Min(value = 1, message = "Mesa não existe")
     @Max(value = 21, message = "Mesa não existe")
     private Integer numMesa;
 
-    @NotNull(message = "Horário de fechamento obrigatório.")
     @PastOrPresent(message = "Horário de fechamento não pode ser futuro.")
-    @HorarioFechamentoValidation
+    //@HorarioFechamentoValidation
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime horarioFechamento;
 
@@ -69,6 +68,8 @@ public class Comanda implements Serializable {
     private Cliente cliente;
 
     public Comanda() {
+        this.horarioAbertura = LocalDateTime.now();
+        this.status = StatusComandaEnum.aberta;
     }
 
     public Comanda(Integer numMesa, Funcionario funcionario) {
@@ -169,5 +170,12 @@ public class Comanda implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void atualizaValorTotal(){
+        itens.forEach(item -> {
+            this.valorTotal = BigDecimal.ZERO;
+            this.valorTotal = valorTotal.add(item.getProduto().getValor());
+        });
     }
 }

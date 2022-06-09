@@ -69,6 +69,14 @@ public class Produto implements Serializable {
         this.valor = valor;
     }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,5 +88,10 @@ public class Produto implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return this.nome;
     }
 }

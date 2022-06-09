@@ -26,9 +26,20 @@ public class Endereco {
     @NotBlank(message = "Cidade obrigatória.")
     @Length(max = 30, message = "Máximo de caracteres: 30")
     private String cidade;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 9)
     @Pattern(regexp = "\\d{5}-?\\d{3}", message = "Formato de CEP deve ser \'XXXXX-XXX\'")
     private String cep;
+
+    public Endereco() {
+    }
+
+    public Endereco(String rua, Integer num, String bairro, String cidade, String cep) {
+        this.rua = rua;
+        this.num = num;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.cep = cep;
+    }
 
     public String getRua() {
         return rua;

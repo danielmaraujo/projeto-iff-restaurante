@@ -4,7 +4,6 @@ import br.edu.iff.restaurante.model.Comanda;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.time.LocalDateTime;
 
 public class HorarioFechamentoValidator implements ConstraintValidator<HorarioFechamentoValidation, Comanda> {
 

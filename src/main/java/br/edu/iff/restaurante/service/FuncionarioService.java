@@ -3,10 +3,12 @@ package br.edu.iff.restaurante.service;
 import br.edu.iff.restaurante.exception.NotFoundException;
 import br.edu.iff.restaurante.model.Cliente;
 import br.edu.iff.restaurante.model.Funcionario;
+import br.edu.iff.restaurante.model.Permissao;
 import br.edu.iff.restaurante.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -37,7 +39,9 @@ public class FuncionarioService {
 
     public Funcionario save(Funcionario f){
         verificaCpf(f.getCpf());
+        removePermissoesNulas(f);
         try {
+            f.setSenha(new BCryptPasswordEncoder().encode(f.getSenha()));
             return repo.save(f);
         } catch (Exception e) {
             Throwable t = e;
@@ -61,8 +65,10 @@ public class FuncionarioService {
     public Funcionario update(Funcionario f, String senhaAtual, String novaSenha, String confirmarNovaSenha){
         Funcionario obj = findById(f.getCpf());
         alterarSenha(obj, senhaAtual, novaSenha, confirmarNovaSenha);
+        removePermissoesNulas(f);
         try {
             f.setCpf(obj.getCpf());
+            f.setSenha(obj.getSenha());
             return repo.save(f);
         } catch (Exception e) {
             Throwable t = e;
@@ -86,13 +92,22 @@ public class FuncionarioService {
 
     private void alterarSenha(Funcionario obj, String senhaAtual, String novaSenha, String confirmarNovaSenha) {
         if (!senhaAtual.isEmpty() && !novaSenha.isEmpty() && !confirmarNovaSenha.isEmpty()) {
-            if (!senhaAtual.equals(obj.getSenha())) {
+            if (new BCryptPasswordEncoder().matches(senhaAtual, obj.getSenha())) {
                 throw new RuntimeException("Senha atual está incorreta.");
             }
             if (!novaSenha.equals(confirmarNovaSenha)) {
                 throw new RuntimeException("Nova Senha e Confirmar Nova Senha não conferem.");
             }
-            obj.setSenha(novaSenha);
+            obj.setSenha(new BCryptPasswordEncoder().encode(novaSenha));
+        }
+    }
+
+    public void removePermissoesNulas(Funcionario f){
+        f.getPermissoes().removeIf( (Permissao p) -> {
+            return p.getId()==null;
+        });
+        if(f.getPermissoes().isEmpty()){
+            throw new RuntimeException("Funcionario deve conter no mínimo 1 permissão.");
         }
     }
 }

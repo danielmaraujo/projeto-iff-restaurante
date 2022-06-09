@@ -1,4 +1,4 @@
-package br.edu.iff.restaurante.controller;
+package br.edu.iff.restaurante.controller.api;
 
 import br.edu.iff.restaurante.model.Comanda;
 import br.edu.iff.restaurante.service.ComandaService;

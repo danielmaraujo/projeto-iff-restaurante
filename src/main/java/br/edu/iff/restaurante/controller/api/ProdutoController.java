@@ -1,4 +1,4 @@
-package br.edu.iff.restaurante.controller;
+package br.edu.iff.restaurante.controller.api;
 
 import br.edu.iff.restaurante.model.Produto;
 import br.edu.iff.restaurante.service.ProdutoService;

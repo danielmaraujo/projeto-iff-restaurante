@@ -1,4 +1,4 @@
-package br.edu.iff.restaurante.controller;
+package br.edu.iff.restaurante.controller.api;
 
 import br.edu.iff.restaurante.exception.GenericError;
 import br.edu.iff.restaurante.exception.NotFoundException;
@@ -30,7 +30,7 @@ public class MyRestControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity notFoundError(NotFoundException ex, HttpServletRequest req){
         GenericError error = new GenericError(LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),

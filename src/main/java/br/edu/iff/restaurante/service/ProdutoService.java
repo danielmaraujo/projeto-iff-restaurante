@@ -29,8 +29,8 @@ public class ProdutoService {
 
     public Produto findById(int id){
         Optional<Produto> result = repo.findById(id);
-        if (result.isPresent()) {
-            throw new NotFoundException("Hotel não encontrado.");
+        if (!result.isPresent()) {
+            throw new NotFoundException("Produto não encontrado.");
         }
         return result.get();
     }

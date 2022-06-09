@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments :: imports-css(title='Sistema de Comandas - Comandas')}">
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="~{fragments :: navbar(page='comandas')}"/>
+
+        <div class="container">
+            <div class="card-header bg-dark text-white" style="margin-top: 2%">
+                <h4>Comandas
+                    <a class="btn btn-outline-light float-right" th:href="@{~/comandas/comanda}" role="button">Abrir comanda</a>
+                </h4>
+            </div>
+
+            <div class="card" th:each="comanda : ${comandas}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${comanda.id}"></h5>
+                    <div class="card-text" th:text="'Número da mesa: '+${comanda.numMesa}"></div>
+                    <div class="card-text" th:text="'Funcionário: '+${comanda.funcionario.nome}"></div>
+                    <div class="card-text" th:text="'Cliente: '+${comanda.cliente.nome}"></div>
+                    <div class="card-text" th:text="'Status: '+${comanda.status}"></div>
+
+                    <div class="card-text" th:text="'Horário de abertura: '+${#temporals.format(comanda.horarioAbertura, 'dd/MM/yyyy - HH:mm')}"></div>
+                    <div class="card-text" th:if="${comanda.status} == StatusComandaEnum.fechada" th:text="'Horário de fechamento: '+${#temporals.format(comanda.horarioFechamento, 'dd-MM-yyyy HH:mm')}"></div>
+
+
+                    <div class="card-text">
+                        <span>Itens:</span>
+                        <div th:each="item : ${comanda.itens}" class="card w-25">
+                            <div class="card-header" th:text="${item.produto.nome}"></div>
+                            <div class="card-body" th:text="'Quantidade: ' + ${item.qtde}"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="card-text" th:if="comanda.status == StatusComandaEnum.fechada" th:text="'Forma de pagamento: '+${comanda.formaPagamento}"></div>
+                    <div class="card-text" th:if="comanda.status == StatusComandaEnum.fechada" th:text="'Valor total: R$'+${#numbers.formatDecimal(comanda.valorTotal, 0, 2, 'COMMA')}"></div>
+
+
+                    <div class="mt-2">
+                    <a th:href="@{'~/comandas/comanda/'+${comanda.id}}" class="btn btn-primary">Editar</a>
+                    <a th:href="@{'~/comandas/'+${comanda.id}+'/deletar'}" class="btn btn-secondary" onclick="return confirm('Deseja realmente excluir essa comanda?')">Excluir</a>
+                    </div>
+                </div>
+        </div>
+
+        <div th:replace="~{fragments :: imports-js}"/>
+    </body>
+</html>

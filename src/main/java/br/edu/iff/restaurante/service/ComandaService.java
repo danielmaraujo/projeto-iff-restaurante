@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,7 @@ public class ComandaService {
 
     public Comanda save(Comanda c){
         verificaComandaAberta(c.getNumMesa());
+        c.atualizaValorTotal();
         try {
             return repo.save(c);
         } catch (Exception e) {
@@ -73,6 +75,10 @@ public class ComandaService {
 
     public Comanda update(Comanda c){
         Comanda obj = findById(c.getId());
+        c.atualizaValorTotal();
+        if(c.getStatus().equals(StatusComandaEnum.fechada) && obj.getStatus().equals(StatusComandaEnum.aberta)){
+            c.setHorarioFechamento(LocalDateTime.now());
+        }
         try {
             c.setId(obj.getId());
             return repo.save(c);
@@ -95,5 +101,4 @@ public class ComandaService {
             throw new RuntimeException("Falha ao excluir a comanda.");
         }
     }
-
 }
